@@ -73,7 +73,7 @@ public class QuestionOne {
         System.out.println("AccountId: " + account.getId());
         //TODO: verklaar en pas eventueel aan
         /*Op dit moment is het account gecommit.
-         Deze staat dus nu wel in de database en kan dus opgehaald worden.
+         Deze staat nu dus wel in de database en kan dus opgehaald worden.
          */
         assertTrue(account.getId() > 0L);
     }
@@ -98,12 +98,21 @@ public class QuestionOne {
         em.getTransaction().begin();
         em.persist(account);
         //TODO: verklaar en pas eventueel aan
+        /*Hier wordt alleen een account aangemaakt,
+         maar nog niet gecommit, dus er zijn nog geen accounts op dit moment.
+         */
         Assert.assertNotEquals(expected, account.getId());
         em.flush();
         //TODO: verklaar en pas eventueel aan
+        /*Na het flushen wordt de persisted data meteen doorgevoerd.
+         Nu is het gezette ID dus wel -100.
+         */
         Assert.assertEquals(expected, account.getId());
         em.getTransaction().commit();
         //TODO: verklaar en pas eventueel aan
+        /*Het account is nu gecommit en staat dus in de database.
+         */
+        Assert.assertNotNull("None accounts found", accountDAOJPAImpl.findAll());
     }
 
     @Test
