@@ -18,8 +18,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Nekkyou on 25-4-2016.
  */
-public class QuestionOne
-{
+public class QuestionOne {
     /*
     Voor elke test moet je in ieder geval de volgende vragen beantwoorden:
         Wat is de waarde van asserties en printstatements?
@@ -61,6 +60,9 @@ public class QuestionOne
         em.persist(account);
 
         //TODO: verklaar en pas eventueel aan
+        /*hier wordt alleen een account aangemaakt,
+         maar nog niet gecommit, dus er zijn nog geen accounts op dit moment
+         */
         assertNull(account.getId());
         em.getTransaction().commit();
         System.out.println("AccountId: " + account.getId());
@@ -140,7 +142,7 @@ public class QuestionOne
         em.getTransaction().begin();
         acc9 = em.merge(acc);
         acc.setBalance(balance2a);
-        acc9.setBalance(balance2a+balance2a);
+        acc9.setBalance(balance2a + balance2a);
         em.getTransaction().commit();
         //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
