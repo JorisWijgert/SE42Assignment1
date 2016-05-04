@@ -1,7 +1,9 @@
 package ExcerciseOne;
 
+import bank.dao.AccountDAOJPAImpl;
 import bank.domain.Account;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import util.DatabaseCleaner;
@@ -33,6 +35,7 @@ public class QuestionOne
     EntityManagerFactory emf;
     EntityManager em;
 
+    AccountDAOJPAImpl accountDAOJPAImpl;
 
     @Before
     public void setup() {
@@ -47,6 +50,8 @@ public class QuestionOne
         } finally {
             em = emf.createEntityManager();
         }
+
+        accountDAOJPAImpl = new AccountDAOJPAImpl(em);
     }
 
     @After
@@ -76,6 +81,8 @@ public class QuestionOne
         assertNull(account.getId());
         em.getTransaction().rollback();
         // TODO code om te testen dat table account geen records bevat. Hint: bestudeer/gebruik AccountDAOJPAImpl
+        // Code om te testen dat table account geen records bevat:
+        Assert.assertNull("Some accounts found", accountDAOJPAImpl.findAll());
     }
 
     @Test
@@ -86,10 +93,10 @@ public class QuestionOne
         em.getTransaction().begin();
         em.persist(account);
         //TODO: verklaar en pas eventueel aan
-        //assertNotEquals(expected, account.getId();
+        Assert.assertNotEquals(expected, account.getId());
         em.flush();
         //TODO: verklaar en pas eventueel aan
-        //assertEquals(expected, account.getId();
+        Assert.assertEquals(expected, account.getId());
         em.getTransaction().commit();
         //TODO: verklaar en pas eventueel aan
     }
@@ -102,7 +109,7 @@ public class QuestionOne
         em.persist(account);
         account.setBalance(expectedBalance);
         em.getTransaction().commit();
-        //assertEquals(expectedBalance, account.getBalance());
+        Assert.assertEquals(expectedBalance, account.getBalance());
         //TODO: verklaar de waarde van account.getBalance
         Long acId = account.getId();
         account = null;
@@ -110,7 +117,7 @@ public class QuestionOne
         em2.getTransaction().begin();
         Account found = em2.find(Account.class, acId);
         //TODO: verklaar de waarde van found.getBalance
-        //assertEquals(expectedBalance, found.getBalance());
+        Assert.assertEquals(expectedBalance, found.getBalance());
     }
 
     @Test
@@ -155,7 +162,7 @@ public class QuestionOne
         acc2 = em.merge(acc);
         assertTrue(em.contains(acc)); // verklaar
         assertTrue(em.contains(acc2)); // verklaar
-        //assertEqual(acc,acc2);  //verklaar
+        Assert.assertEquals(acc,acc2); //verklaar
         acc2.setBalance(balance3b);
         acc.setBalance(balance3c);
         em.getTransaction().commit();
@@ -174,16 +181,16 @@ public class QuestionOne
         Account account2 = new Account(114L);
         Account tweedeAccountObject = account2;
         tweedeAccountObject.setBalance(650l);
-        //assertEquals((Long)650L,account2.getBalance());  //verklaar
+        Assert.assertEquals((Long)650L,account2.getBalance());  //verklaar
         account2.setId(account.getId());
         em.getTransaction().begin();
         account2 = em.merge(account2);
-        //assertSame(account,account2);  //verklaar
+        Assert.assertSame(account,account2);  //verklaar
         assertTrue(em.contains(account2));  //verklaar
-        //assertFalse(em.contains(tweedeAccountObject));  //verklaar
+        Assert.assertFalse(em.contains(tweedeAccountObject));  //verklaar
         tweedeAccountObject.setBalance(850l);
-        //assertEquals((Long)650L,account.getBalance());  //verklaar
-        //assertEquals((Long)650L,account2.getBalance());  //verklaar
+        Assert.assertEquals((Long)650L,account.getBalance());  //verklaar
+        Assert.assertEquals((Long)650L,account2.getBalance());  //verklaar
         em.getTransaction().commit();
         em.close();
     }
@@ -201,13 +208,13 @@ public class QuestionOne
         Account accF2;
         accF1 = em.find(Account.class, acc1.getId());
         accF2 = em.find(Account.class, acc1.getId());
-        //assertSame(accF1, accF2);
+        Assert.assertSame(accF1, accF2);
 
         // scenario 2
         accF1 = em.find(Account.class, acc1.getId());
         em.clear();
         accF2 = em.find(Account.class, acc1.getId());
-        //assertSame(accF1, accF2);
+        Assert.assertSame(accF1, accF2);
         //TODO verklaar verschil tussen beide scenario's
     }
 
@@ -221,7 +228,7 @@ public class QuestionOne
         //Database bevat nu een account.
 
         em.remove(acc1);
-        //assertEquals(id, acc1.getId());
+        Assert.assertEquals(id, acc1.getId());
         Account accFound = em.find(Account.class, id);
         assertNull(accFound);
         //TODO: verklaar bovenstaande asserts
