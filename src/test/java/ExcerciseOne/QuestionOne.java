@@ -65,13 +65,16 @@ public class QuestionOne {
         em.persist(account);
 
         //TODO: verklaar en pas eventueel aan
-        /*hier wordt alleen een account aangemaakt,
-         maar nog niet gecommit, dus er zijn nog geen accounts op dit moment
+        /*Hier wordt alleen een account aangemaakt,
+         maar nog niet gecommit, dus er zijn nog geen accounts op dit moment.
          */
         assertNull(account.getId());
         em.getTransaction().commit();
         System.out.println("AccountId: " + account.getId());
         //TODO: verklaar en pas eventueel aan
+        /*Op dit moment is het account gecommit.
+         Deze staat dus nu wel in de database en kan dus opgehaald worden.
+         */
         assertTrue(account.getId() > 0L);
     }
 
