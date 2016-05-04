@@ -125,12 +125,19 @@ public class QuestionOne {
         em.getTransaction().commit();
         Assert.assertEquals(expectedBalance, account.getBalance());
         //TODO: verklaar de waarde van account.getBalance
+        /*Het nieuwe balans van het gemaakte account is gecommit.
+         Daarom geeft de methode getBalance() 400 terug.
+         */
         Long acId = account.getId();
         account = null;
         EntityManager em2 = emf.createEntityManager();
         em2.getTransaction().begin();
         Account found = em2.find(Account.class, acId);
         //TODO: verklaar de waarde van found.getBalance
+        /*Er wordt in de database gezocht naar een account met het id dat gelijk is aan het eerder toegevoegde account.
+         Het gevonden account krijgt de variabele naam "found".
+         Het balans is in de tussentijd nog niet veranderd dus geeft found.getBalance() 400 terug.
+         */
         Assert.assertEquals(expectedBalance, found.getBalance());
     }
 
