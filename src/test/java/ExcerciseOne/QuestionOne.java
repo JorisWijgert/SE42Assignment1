@@ -225,7 +225,7 @@ public class QuestionOne {
         em.getTransaction().commit();
         //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
         /*Account 1 is opnieuw geinitialiseerd en het banksaldo is vervolgens aangepast.
-         acc9 is gemerged met acc1 waardoor deze dus ook in de database is gezet.
+         acc1 is gemerged en de waardes daarvan zijn gedeclareerd aan acc9, acc9 staat dus wel in de database maar met de waardes van acc1.
          Het saldo van acc9 is ook aangepast en zal 422 moeten bedragen (2 * 211)
          */
         Assert.assertEquals("Balance not set correctly", new Long(211L), acc.getBalance());
@@ -248,6 +248,8 @@ public class QuestionOne {
         acc = new Account(3L);
         em.getTransaction().begin();
         acc2 = em.merge(acc);
+        /*
+         */
         assertTrue(em.contains(acc)); // verklaar
         assertTrue(em.contains(acc2)); // verklaar
         Assert.assertEquals(acc, acc2); //verklaar
