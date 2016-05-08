@@ -192,8 +192,18 @@ public class QuestionOne {
         acc.setBalance(balance1);
         em.getTransaction().commit();
         //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifieren.
+        /*Account 1 is gecreëerd en het banksaldo is vervolgens aangepast.
+         Daarna is het gelijk gecommit dus is de verandering opgeslagen in de databse.
+         Alleen account 1 is gecommit dus de andere accounts zullen niet aanwezig zijn in de database.
+         */
+        Assert.assertSame("Balance not set correctly", 100L, acc.getBalance());
+        assertTrue(acc.getId() > 0L);
+        assertNull(acc2.getId());
+        assertNull(acc9.getId());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
-
+        Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(1L));
+        Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(2L));
+        Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(9L));
 
         // scenario 2
         Long balance2a = 211L;
