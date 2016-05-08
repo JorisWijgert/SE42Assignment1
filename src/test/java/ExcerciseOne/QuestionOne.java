@@ -203,6 +203,9 @@ public class QuestionOne {
         assertTrue(acc.getId() > 0L);
         assertNull(acc2.getId());
         assertNull(acc9.getId());
+        Assert.assertSame("Account number not set correctly", 1L, acc.getAccountNr());
+        assertNull(acc2.getAccountNr());
+        assertNull(acc9.getAccountNr());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(1L));
         try {
@@ -234,6 +237,8 @@ public class QuestionOne {
         Assert.assertEquals("Balance not set correctly", new Long(422L), acc9.getBalance());
         assertNull(acc.getId());
         assertTrue(acc9.getId() > 0L);
+        Assert.assertSame("Account number not set correctly", 2L, acc.getAccountNr());
+        Assert.assertSame("Account number not set correctly", 2L, acc9.getAccountNr());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         // HINT: gebruik acccountDAO.findByAccountNr
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
@@ -265,6 +270,8 @@ public class QuestionOne {
         Assert.assertEquals("Balance not set correctly", new Long(333L), acc.getBalance());
         assertTrue(acc2.getId() > 0L);
         assertNull(acc.getId());
+        Assert.assertSame("Account number not set correctly", 3L, acc2.getAccountNr());
+        assertNull(acc.getAccountNr());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(3L));
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
