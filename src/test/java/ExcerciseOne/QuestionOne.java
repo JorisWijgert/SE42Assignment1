@@ -280,16 +280,16 @@ public class QuestionOne {
         Account account2 = new Account(114L);
         Account tweedeAccountObject = account2;
         tweedeAccountObject.setBalance(650l);
-        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account2.getBalance());  //account2 en tweedeaccountObject zijn gelijk aan elkaar, dus de wijzigingen worden ook bij beiden toegepast
         account2.setId(account.getId());
         em.getTransaction().begin();
         account2 = em.merge(account2);
-        Assert.assertSame(account, account2);  //verklaar
-        assertTrue(em.contains(account2));  //verklaar
-        Assert.assertFalse(em.contains(tweedeAccountObject));  //verklaar
+        Assert.assertSame(account, account2);  // beiden hebben hetzelfde accountnummer, dus ze verwijzen ook naar hetzelfde account
+        assertTrue(em.contains(account2));  // account2 staat in de database door de merge
+        Assert.assertFalse(em.contains(tweedeAccountObject));  // tweedeaccountobject is niet in de database gezet, omdat deze niet in de merge voorkwam
         tweedeAccountObject.setBalance(850l);
-        Assert.assertEquals((Long) 650L, account.getBalance());  //verklaar
-        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account.getBalance());  // omdat account en account2 naar hetzelfde verwijzen, hebben ze ook hetzelfde balance
+        Assert.assertEquals((Long) 650L, account2.getBalance());  // balance was al aangepast bij de eerste assert, en dit is nog steeds hetzelfde
         em.getTransaction().commit();
         em.close();
     }
@@ -337,6 +337,6 @@ public class QuestionOne {
 
     @Test
     public void GenerationTypeTest() {
-        //GenerationType is nergens te vinden...
+
     }
 }
