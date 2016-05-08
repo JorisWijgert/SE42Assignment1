@@ -193,7 +193,7 @@ public class QuestionOne {
         em.persist(acc);
         acc.setBalance(balance1);
         em.getTransaction().commit();
-        //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifieren.
+        //DONE: voeg asserties toe om je verwachte waarde van de attributen te verifieren.
         /*Account 1 is gecreëerd en het banksaldo is vervolgens aangepast.
          Daarna is het gelijk gecommit dus is de verandering opgeslagen in de databse.
          Alleen account 1 is gecommit dus de andere accounts zullen niet aanwezig zijn in de database.
@@ -202,7 +202,7 @@ public class QuestionOne {
         assertTrue(acc.getId() > 0L);
         assertNull(acc2.getId());
         assertNull(acc9.getId());
-        //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
+        //DONE: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(1L));
         try {
             Assert.assertNull(accountDAOJPAImpl.findByAccountNr(2L));
@@ -223,7 +223,7 @@ public class QuestionOne {
         acc.setBalance(balance2a);
         acc9.setBalance(balance2a + balance2a);
         em.getTransaction().commit();
-        //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
+        //DONE: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
         /*Account 1 is opnieuw geinitialiseerd en het banksaldo is vervolgens aangepast.
          acc1 is gemerged en de waardes daarvan zijn gedeclareerd aan acc9, acc9 staat dus wel in de database maar met de waardes van acc1.
          Het saldo van acc9 is ook aangepast en zal 422 moeten bedragen (2 * 211)
@@ -232,7 +232,7 @@ public class QuestionOne {
         Assert.assertEquals("Balance not set correctly", new Long(422L), acc9.getBalance());
         assertNull(acc.getId());
         assertTrue(acc9.getId() > 0L);
-        //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
+        //DONE: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         // HINT: gebruik acccountDAO.findByAccountNr
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
         try {
@@ -256,8 +256,8 @@ public class QuestionOne {
         acc2.setBalance(balance3b);
         acc.setBalance(balance3c);
         em.getTransaction().commit();
-        //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
-        //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
+        //DONE: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
+        //DONE: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
 
 
         // scenario 4
@@ -271,16 +271,16 @@ public class QuestionOne {
         Account account2 = new Account(114L);
         Account tweedeAccountObject = account2;
         tweedeAccountObject.setBalance(650l);
-        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account2.getBalance());  //account2 en tweedeaccountObject zijn gelijk aan elkaar, dus de wijzigingen worden ook bij beiden toegepast
         account2.setId(account.getId());
         em.getTransaction().begin();
         account2 = em.merge(account2);
-        Assert.assertSame(account, account2);  //verklaar
-        assertTrue(em.contains(account2));  //verklaar
-        Assert.assertFalse(em.contains(tweedeAccountObject));  //verklaar
+        Assert.assertSame(account, account2);  // beiden hebben hetzelfde accountnummer, dus ze verwijzen ook naar hetzelfde account
+        assertTrue(em.contains(account2));  // account2 staat in de database door de merge
+        Assert.assertFalse(em.contains(tweedeAccountObject));  // tweedeaccountobject is niet in de database gezet, omdat deze niet in de merge voorkwam
         tweedeAccountObject.setBalance(850l);
-        Assert.assertEquals((Long) 650L, account.getBalance());  //verklaar
-        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account.getBalance());  // omdat account en account2 naar hetzelfde verwijzen, hebben ze ook hetzelfde balance
+        Assert.assertEquals((Long) 650L, account2.getBalance());  // balance was al aangepast bij de eerste assert, en dit is nog steeds hetzelfde
         em.getTransaction().commit();
         em.close();
     }
