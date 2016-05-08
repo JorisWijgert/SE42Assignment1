@@ -2,14 +2,13 @@ package ExcerciseOne;
 
 import bank.dao.AccountDAOJPAImpl;
 import bank.domain.Account;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import util.DatabaseCleaner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import java.sql.SQLException;
@@ -179,6 +178,9 @@ public class QuestionOne {
         Assert.assertEquals(account.getBalance(), found.getBalance());
     }
 
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
     @Test
     public void MergeTest() {
         Account acc = new Account(1L);
@@ -202,8 +204,16 @@ public class QuestionOne {
         assertNull(acc9.getId());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(1L));
-        Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(2L));
-        Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(9L));
+        try {
+            Assert.assertNull(accountDAOJPAImpl.findByAccountNr(2L));
+        } catch (NoResultException e) {
+            Assert.assertNotNull(e.getMessage());
+        }
+        try {
+            Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(9L));
+        } catch(NoResultException e){
+            Assert.assertNotNull(e.getMessage());
+        }
 
         // scenario 2
         Long balance2a = 211L;
@@ -218,14 +228,18 @@ public class QuestionOne {
          acc9 is gemerged met acc1 waardoor deze dus ook in de database is gezet.
          Het saldo van acc9 is ook aangepast en zal 422 moeten bedragen (2 * 211)
          */
-        Assert.assertSame("Balance not set correctly", 211L, acc.getBalance());
-        Assert.assertSame("Balance not set correctly", 422L, acc9.getBalance());
-        assertTrue(acc.getId() > 0L);
+        Assert.assertEquals("Balance not set correctly", new Long(211L), acc.getBalance());
+        Assert.assertEquals("Balance not set correctly", new Long(422L), acc9.getBalance());
+        assertNull(acc.getId());
         assertTrue(acc9.getId() > 0L);
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         // HINT: gebruik acccountDAO.findByAccountNr
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
-        Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(9L));
+        try {
+            Assert.assertNull("Account found", accountDAOJPAImpl.findByAccountNr(9L));
+        } catch(NoResultException e){
+            Assert.assertNotNull(e.getMessage());
+        }
 
 
         // scenario 3
@@ -236,7 +250,7 @@ public class QuestionOne {
         acc2 = em.merge(acc);
         assertTrue(em.contains(acc)); // verklaar
         assertTrue(em.contains(acc2)); // verklaar
-        Assert.assertEquals(acc,acc2); //verklaar
+        Assert.assertEquals(acc, acc2); //verklaar
         acc2.setBalance(balance3b);
         acc.setBalance(balance3c);
         em.getTransaction().commit();
@@ -255,16 +269,16 @@ public class QuestionOne {
         Account account2 = new Account(114L);
         Account tweedeAccountObject = account2;
         tweedeAccountObject.setBalance(650l);
-        Assert.assertEquals((Long)650L,account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
         account2.setId(account.getId());
         em.getTransaction().begin();
         account2 = em.merge(account2);
-        Assert.assertSame(account,account2);  //verklaar
+        Assert.assertSame(account, account2);  //verklaar
         assertTrue(em.contains(account2));  //verklaar
         Assert.assertFalse(em.contains(tweedeAccountObject));  //verklaar
         tweedeAccountObject.setBalance(850l);
-        Assert.assertEquals((Long)650L,account.getBalance());  //verklaar
-        Assert.assertEquals((Long)650L,account2.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account.getBalance());  //verklaar
+        Assert.assertEquals((Long) 650L, account2.getBalance());  //verklaar
         em.getTransaction().commit();
         em.close();
     }
