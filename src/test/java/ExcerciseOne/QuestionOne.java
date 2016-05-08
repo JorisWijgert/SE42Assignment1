@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Nekkyou on 25-4-2016.
+ * Created by jvdwi on 25-4-2016.
  */
 public class QuestionOne {
     /*
@@ -312,9 +312,11 @@ public class QuestionOne {
         em.clear();
         accF2 = em.find(Account.class, acc1.getId());
         Assert.assertNotSame(accF1, accF2);
-        //TODO verklaar verschil tussen beide scenario's
+        //DONE verklaar verschil tussen beide scenario's
+
         //assertSame is veranderd in assertNotSame, omdat ze niet gelijk zijn
-        //Dit komt omdat...
+        //Dit komt omdat de entitymanager gecleard wordt en dus wordt accF2 niks
+        //Terwijl accF1 nog wel bestaat
     }
 
     @Test
@@ -331,6 +333,8 @@ public class QuestionOne {
         Account accFound = em.find(Account.class, id);
         assertNull(accFound);
         //TODO: verklaar bovenstaande asserts
+        //in eerste instantie is acc1 nog de lokale veriabele, dus bestaat het id nog
+        //maar bij de tweede wordt accFound gezocht in de database, maar deze is geremoved.
     }
 
     @Test
