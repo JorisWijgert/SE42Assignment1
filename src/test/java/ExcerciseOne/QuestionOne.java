@@ -264,7 +264,7 @@ public class QuestionOne {
         Assert.assertEquals("Balance not set correctly", new Long(322L), acc2.getBalance());
         Assert.assertEquals("Balance not set correctly", new Long(333L), acc.getBalance());
         assertTrue(acc2.getId() > 0L);
-        assertTrue(acc.getId() > 0L);
+        assertNull(acc.getId());
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(3L));
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
@@ -313,8 +313,10 @@ public class QuestionOne {
         accF1 = em.find(Account.class, acc1.getId());
         em.clear();
         accF2 = em.find(Account.class, acc1.getId());
-        Assert.assertSame(accF1, accF2);
+        Assert.assertNotSame(accF1, accF2);
         //TODO verklaar verschil tussen beide scenario's
+        //assertSame is veranderd in assertNotSame, omdat ze niet gelijk zijn
+        //Dit komt omdat...
     }
 
     @Test
@@ -335,6 +337,6 @@ public class QuestionOne {
 
     @Test
     public void GenerationTypeTest() {
-
+        //GenerationType is nergens te vinden...
     }
 }
