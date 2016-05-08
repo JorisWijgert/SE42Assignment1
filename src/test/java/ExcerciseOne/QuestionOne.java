@@ -250,9 +250,9 @@ public class QuestionOne {
         acc2 = em.merge(acc);
         /*
          */
-        Assert.assertFalse("bevat account", em.contains(acc)); // Assert true is false gemaakt, omdat acc is gemerged, maar nog niet gecommit
-        assertTrue(em.contains(acc2)); // acc2 is wel al in de database gezet
-        Assert.assertNotEquals(acc, acc2); // acc staat nog niet in de database, acc2 wel al
+        Assert.assertFalse("Contains account", em.contains(acc)); // Assert true is false gemaakt, omdat acc is gemerged, maar nog niet gecommit
+        assertTrue("Doesn't Contains account", em.contains(acc2)); // acc2 is wel al in de database gezet
+        Assert.assertNotEquals("Accounts are equal", acc, acc2); // acc staat nog niet in de database, acc2 wel al
         acc2.setBalance(balance3b);
         acc.setBalance(balance3c);
         em.getTransaction().commit();
