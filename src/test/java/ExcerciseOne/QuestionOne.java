@@ -161,22 +161,22 @@ public class QuestionOne {
         em.persist(account);
         account.setBalance(expectedBalance);
         em.getTransaction().commit();
-        Assert.assertEquals(expectedBalance, account.getBalance());
-        //DONE: verklaar de waarde van account.getBalance
-        /*Het nieuwe balans van het gemaakte account is gecommit.
-         Daarom geeft de methode getBalance() 400 terug.
-         */
         Long acId = account.getId();
-        account = null;
         EntityManager em2 = emf.createEntityManager();
         em2.getTransaction().begin();
         Account found = em2.find(Account.class, acId);
-        //DONE: verklaar de waarde van found.getBalance
-        /*Er wordt in de database gezocht naar een account met het id dat gelijk is aan het eerder toegevoegde account.
-         Het gevonden account krijgt de variabele naam "found".
-         Het balans is in de tussentijd nog niet veranderd dus geeft found.getBalance() 400 terug.
+        /*
+        hier wordt de balans veranderd bij 'account', dit wordt gepersist en gecommit
+        met de refresh op de tweede entitymanager wordt voor found de waarde opnieuw ingesteld
+        omdat account en found naar hetzelfde record verwijzen, wordt de balans van account en found weer gelijk
          */
-        Assert.assertEquals(expectedBalance, found.getBalance());
+        account.setBalance(12L);
+        em.getTransaction().begin();
+        em.persist(account);
+        em.getTransaction().commit();
+        Assert.assertNotEquals(account.getBalance(), found.getBalance());
+        em2.refresh(found);
+        Assert.assertEquals(account.getBalance(), found.getBalance());
     }
 
     @Test
