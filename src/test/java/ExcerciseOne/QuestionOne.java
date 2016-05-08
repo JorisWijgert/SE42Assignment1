@@ -187,6 +187,7 @@ public class QuestionOne {
         Account acc2 = new Account(2L);
         Account acc9 = new Account(9L);
 
+
         // scenario 1
         Long balance1 = 100L;
         em.getTransaction().begin();
@@ -214,6 +215,7 @@ public class QuestionOne {
         } catch(NoResultException e){
             Assert.assertNotNull(e.getMessage());
         }
+
 
         // scenario 2
         Long balance2a = 211L;
@@ -266,6 +268,7 @@ public class QuestionOne {
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(3L));
         Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
+
 
         // scenario 4
         Account account = new Account(114L);
