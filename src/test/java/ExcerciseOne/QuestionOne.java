@@ -214,8 +214,18 @@ public class QuestionOne {
         acc9.setBalance(balance2a + balance2a);
         em.getTransaction().commit();
         //TODO: voeg asserties toe om je verwachte waarde van de attributen te verifiëren.
+        /*Account 1 is opnieuw geinitialiseerd en het banksaldo is vervolgens aangepast.
+         acc9 is gemerged met acc1 waardoor deze dus ook in de database is gezet.
+         Het saldo van acc9 is ook aangepast en zal 422 moeten bedragen (2 * 211)
+         */
+        Assert.assertSame("Balance not set correctly", 211L, acc.getBalance());
+        Assert.assertSame("Balance not set correctly", 422L, acc9.getBalance());
+        assertTrue(acc.getId() > 0L);
+        assertTrue(acc9.getId() > 0L);
         //TODO: doe dit zowel voor de bovenstaande java objecten als voor opnieuw bij de entitymanager opgevraagde objecten met overeenkomstig Id.
         // HINT: gebruik acccountDAO.findByAccountNr
+        Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(2L));
+        Assert.assertNotNull("Account not found", accountDAOJPAImpl.findByAccountNr(9L));
 
 
         // scenario 3
