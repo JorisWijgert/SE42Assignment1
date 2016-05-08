@@ -13,6 +13,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -64,14 +66,14 @@ public class QuestionOne {
         em.getTransaction().begin();
         em.persist(account);
 
-        //TODO: verklaar en pas eventueel aan
+        //DONE: verklaar en pas eventueel aan
         /*Hier wordt alleen een account aangemaakt,
          maar nog niet gecommit, dus er zijn nog geen accounts op dit moment.
          */
         assertNull(account.getId());
         em.getTransaction().commit();
         System.out.println("AccountId: " + account.getId());
-        //TODO: verklaar en pas eventueel aan
+        //DONE: verklaar en pas eventueel aan
         /*Op dit moment is het account gecommit.
          Deze staat nu dus wel in de database en kan dus opgehaald worden.
          */
@@ -85,9 +87,11 @@ public class QuestionOne {
         em.persist(account);
         assertNull(account.getId());
         em.getTransaction().rollback();
-        // TODO code om te testen dat table account geen records bevat. Hint: bestudeer/gebruik AccountDAOJPAImpl
+        // DONE code om te testen dat table account geen records bevat. Hint: bestudeer/gebruik AccountDAOJPAImpl
         // Code om te testen dat table account geen records bevat:
-        Assert.assertNull("Some accounts found", accountDAOJPAImpl.findAll());
+        // Eerst dachten we dat AssertNull ook werkte, maar het bleek dat er een lege list van accounts
+        // uit findAll kwam
+        Assert.assertEquals("Some accounts found", new ArrayList<Account>(), accountDAOJPAImpl.findAll());
     }
 
     @Test
@@ -97,19 +101,20 @@ public class QuestionOne {
         account.setId(expected);
         em.getTransaction().begin();
         em.persist(account);
-        //TODO: verklaar en pas eventueel aan
-        /*Hier wordt alleen een account aangemaakt,
-         maar nog niet gecommit, dus er zijn nog geen accounts op dit moment.
-         */
-        Assert.assertNotEquals(expected, account.getId());
-        em.flush();
-        //TODO: verklaar en pas eventueel aan
-        /*Na het flushen wordt de persisted data meteen doorgevoerd.
-         Nu is het gezette ID dus wel -100.
+        //DONE: verklaar en pas eventueel aan
+        /* AssertEquals en AssertNotEquals zijn omgewisseld
+        Bij deze test is expected gelijk aan id, omdat deze al van te voren wordt ingesteld.
          */
         Assert.assertEquals(expected, account.getId());
+        em.flush();
+        //DONE: verklaar en pas eventueel aan
+        /* AssertEquals en AssertNotEquals zijn omgewisseld
+        In dit geval zijn ze niet gelijk, aangezien de data is geflushed en dus teruggezet naar
+        een eerdere situatie
+         */
+        Assert.assertNotEquals(expected, account.getId());
         em.getTransaction().commit();
-        //TODO: verklaar en pas eventueel aan
+        //DONE: verklaar en pas eventueel aan
         /*Het account is nu gecommit en staat dus in de database.
          */
         Assert.assertNotNull("None accounts found", accountDAOJPAImpl.findAll());
@@ -124,7 +129,7 @@ public class QuestionOne {
         account.setBalance(expectedBalance);
         em.getTransaction().commit();
         Assert.assertEquals(expectedBalance, account.getBalance());
-        //TODO: verklaar de waarde van account.getBalance
+        //DONE: verklaar de waarde van account.getBalance
         /*Het nieuwe balans van het gemaakte account is gecommit.
          Daarom geeft de methode getBalance() 400 terug.
          */
@@ -133,7 +138,7 @@ public class QuestionOne {
         EntityManager em2 = emf.createEntityManager();
         em2.getTransaction().begin();
         Account found = em2.find(Account.class, acId);
-        //TODO: verklaar de waarde van found.getBalance
+        //DONE: verklaar de waarde van found.getBalance
         /*Er wordt in de database gezocht naar een account met het id dat gelijk is aan het eerder toegevoegde account.
          Het gevonden account krijgt de variabele naam "found".
          Het balans is in de tussentijd nog niet veranderd dus geeft found.getBalance() 400 terug.
@@ -143,7 +148,35 @@ public class QuestionOne {
 
     @Test
     public void RefreshTest() {
+        /*
+        In de vorige opdracht verwijzen de objecten account en found naar dezelfde rij in de database.
+        Pas een van de objecten aan, persisteer naar de database.
+        Refresh vervolgens het andere object om de veranderde state uit de database te halen.
+        Test met asserties dat dit gelukt is.
+         */
 
+        Long expectedBalance = 400L;
+        Account account = new Account(114L);
+        em.getTransaction().begin();
+        em.persist(account);
+        account.setBalance(expectedBalance);
+        em.getTransaction().commit();
+        Assert.assertEquals(expectedBalance, account.getBalance());
+        //DONE: verklaar de waarde van account.getBalance
+        /*Het nieuwe balans van het gemaakte account is gecommit.
+         Daarom geeft de methode getBalance() 400 terug.
+         */
+        Long acId = account.getId();
+        account = null;
+        EntityManager em2 = emf.createEntityManager();
+        em2.getTransaction().begin();
+        Account found = em2.find(Account.class, acId);
+        //DONE: verklaar de waarde van found.getBalance
+        /*Er wordt in de database gezocht naar een account met het id dat gelijk is aan het eerder toegevoegde account.
+         Het gevonden account krijgt de variabele naam "found".
+         Het balans is in de tussentijd nog niet veranderd dus geeft found.getBalance() 400 terug.
+         */
+        Assert.assertEquals(expectedBalance, found.getBalance());
     }
 
     @Test
